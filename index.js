@@ -13,7 +13,7 @@ request.get({
 }, function(err, response, body) {
   var parsedCollection = JSON.parse(body);
   var records = parsedCollection.releases;
-  var randomRecord = records[Math.floor(Math.random() * 50)];
+  var randomRecord = records[Math.floor(Math.random() * records.length)];
 
   request.get({
     uri: 'http://api.discogs.com/releases/' + randomRecord.release_id,
