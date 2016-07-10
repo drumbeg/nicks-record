@@ -1,0 +1,8 @@
+{
+  "name": "NicksRecord",
+  "version": "0.1.0",
+  "dependencies": {
+    "twitter": "~1.3.0",
+    "request": "~2.73.0"
+  }
+}
