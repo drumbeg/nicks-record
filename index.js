@@ -7,6 +7,7 @@ config = JSON.parse(config);
 
 var randomRecord;
 
+function go() {
 request.get({
   uri: 'http://api.discogs.com/users/vinylmemory/collection?page=1&per_page=1000',
   headers: {"user-agent": 'vinylmemory/0.1'}
@@ -21,7 +22,8 @@ request.get({
   }, function(err, response, body) {
 
     var parsedRelease = JSON.parse(body);
-    var videoLink = parsedRelease.videos[0].uri;
+    var videoLink = parsedRelease.hasOwnProperty("videos") ? parsedRelease.videos[0].uri : '';
+    var discogsUrl = parsedRelease.uri;
 
     var client = new Twitter({
       consumer_key: config.twitter_auth.consumer_key,
@@ -36,14 +38,18 @@ request.get({
       ' released in ' +
       randomRecord.basic_information.year +
       '. ' +
-      videoLink
+      videoLink + ' ' + discogsUrl
     }, function(error, tweets, response) {
-      if (!error) {
+      if (error) {
         process.exit();
+        console.log(error);
       }
-      console.log(error);
     });
   });
 });
+setTimeout(go, 1 * 60 * 1000);
+}
+
+go();
 
 
