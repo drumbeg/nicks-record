@@ -6,12 +6,18 @@ var config = fs.readFileSync('config.json');
 config = JSON.parse(config);
 
 var randomRecord;
+var pageIncrement = 1;
 
 function go() {
 request.get({
-  uri: 'http://api.discogs.com/users/vinylmemory/collection?page=1&per_page=1000',
+  uri: 'http://api.discogs.com/users/vinylmemory/collection?page=' + pageIncrement + '&per_page=1000',
   headers: {"user-agent": 'vinylmemory/0.1'}
 }, function(err, response, body) {
+-- Resource not found. Hit end of collection, so go back to 1st page and start again.
+if (response.statusCode == 404) {
+  pageIncrement = 1;
+  go();
+} else {
   var parsedCollection = JSON.parse(body);
   var records = parsedCollection.releases;
   var randomRecord = records[Math.floor(Math.random() * records.length)];
@@ -40,16 +46,16 @@ request.get({
       '. ' +
       videoLink + ' ' + discogsUrl
     }, function(error, tweets, response) {
-      if (error) {
-        process.exit();
+      if (error) {        
         console.log(error);
       }
     });
   });
+  pageIncrement++;
+}
 });
-setTimeout(go, 1 * 60 * 1000);
 }
 
-go();
+setInterval(go, 0.02 * 60 * 1000);
 
 
