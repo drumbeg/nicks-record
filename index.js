@@ -13,7 +13,7 @@ request.get({
   uri: 'http://api.discogs.com/users/vinylmemory/collection?page=' + pageIncrement + '&per_page=1000',
   headers: {"user-agent": 'vinylmemory/0.1'}
 }, function(err, response, body) {
--- Resource not found. Hit end of collection, so go back to 1st page and start again.
+// Resource not found. Hit end of collection, so go back to 1st page and start again.
 if (response.statusCode == 404) {
   pageIncrement = 1;
   go();
@@ -39,14 +39,14 @@ if (response.statusCode == 404) {
     });
 
     client.post('statuses/update', {
-      status:randomRecord.basic_information.artists[0].name + ' : ' + 
+      status:randomRecord.basic_information.artists[0].name + ' : ' +
       randomRecord.basic_information.title +
       ' released in ' +
       randomRecord.basic_information.year +
       '. ' +
       videoLink + ' ' + discogsUrl
     }, function(error, tweets, response) {
-      if (error) {        
+      if (error) {
         console.log(error);
       }
     });
